@@ -14,8 +14,10 @@ void GestorEstados::update() {
     switch (estadoActual) {
         case BUSQUEDA:
             controlMov.giroDerecho(100);
-            if (estadosE[0] == 1 || estadosE[1] == 1 || estadosE[2] == 1 || estadosE[3] == 1 || estadosE[4] == 1 || estadosE[5] == 1 || estadosE[6] == 1 || estadosE[7] == 1) {
+            if (estadosE[0] == 1 || estadosE[1] == 1 || estadosE[2] == 1 || estadosE[3] == 1 || estadosE[4] == 1 || estadosE[5] == 1 || estadosE[6] == 1) {
                 estadoActual = ALINEACION;
+            } else if (estadosE[6] == 1) {
+                estadoActual = GIRO_Y_ATAQUE;
             }
             break;
 
@@ -63,6 +65,14 @@ void GestorEstados::update() {
                 delay(500);
                 estadoActual = BUSQUEDA;
             }
+            break;
+            
+        case GIRO_Y_ATAQUE:
+            controlMov.giroDerecho(255);
+            delay(1000); // Ajusta este valor según sea necesario para un giro de 180 grados
+            controlMov.adelante(255); // Ataque rápido después de girar
+            delay(500); // Duración del ataque
+            estadoActual = BUSQUEDA;
             break;
     }
 }

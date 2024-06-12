@@ -7,7 +7,7 @@
 
 class GestorEstados {
 public:
-    enum Estado { BUSQUEDA, ALINEACION, AVANCE, ATAQUE_RAPIDO, DETECCION_LINEA };
+    enum Estado { BUSQUEDA, ALINEACION, AVANCE, ATAQUE_RAPIDO, DETECCION_LINEA, GIRO_Y_ATAQUE };
     
     GestorEstados(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL)
         : controlMov(controlMov), detE(detE), detL(detL), estadoActual(BUSQUEDA) {}
