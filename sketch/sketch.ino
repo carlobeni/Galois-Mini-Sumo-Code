@@ -15,7 +15,7 @@
 ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB);
 
 const uint8_t numSensoresE = 8;
-uint8_t pinSensoresE[numSensoresE] = {32, 33, 25, 26, 27, 14, 12, 13}; // Se añadió el sensor trasero
+uint8_t pinSensoresE[numSensoresE] = {32, 33, 25, 26, 27, 14, 12, 13};
 DetectorEnemigo detE(pinSensoresE, numSensoresE);
 
 const uint8_t numSensoresL = 2;
@@ -32,5 +32,7 @@ void setup() {
 }
 
 void loop() {
-  gestorEstados.update();
+  //gestorEstados.update();
+  for(int i=0; i<=150 ; i+=20)
+    controlMov.setBothMotorsSpeed(i,i);
 }
