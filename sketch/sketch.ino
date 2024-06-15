@@ -15,12 +15,16 @@
 
 ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB);
 
+//Conector 1: 3 sensores de Enemigo
+//Conector 2: 3 sensores de Enemigo
+//Conector 3: sersor enemigo trasero + 2 sensores QT
+
 const uint8_t numSensoresE = 8;
-uint8_t pinSensoresE[numSensoresE] = {32, 33, 25, 26, 27, 14, 12};
+uint8_t pinSensoresE[numSensoresE] = {32, 33, 25, 26, 27, 14, 36}; //
 DetectorEnemigo detE(pinSensoresE, numSensoresE);
 
 const uint8_t numSensoresL = 2;
-uint8_t pinSensoresL[numSensoresL] = {34, 12};
+uint8_t pinSensoresL[numSensoresL] = {39, 34};
 DetectorLinea detL(pinSensoresL, numSensoresL);
 
 GestorEstados gestorEstados(controlMov, detE, detL);
