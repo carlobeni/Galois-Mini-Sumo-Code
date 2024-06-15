@@ -5,13 +5,20 @@
 #include "DetectorEnemigo.h"
 #include "DetectorLinea.h"
 
+enum Estado {
+    INICIO,
+    BUSQUEDA,
+    ALINEACION,
+    AVANCE,
+    ATAQUE_RAPIDO,
+    DETECCION_LINEA,
+    GIRO_Y_ATAQUE
+};
+
 class GestorEstados {
 public:
-    enum Estado { BUSQUEDA, ALINEACION, AVANCE, ATAQUE_RAPIDO, DETECCION_LINEA, GIRO_Y_ATAQUE };
-    
-    GestorEstados(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL)
-        : controlMov(controlMov), detE(detE), detL(detL), estadoActual(BUSQUEDA) {}
-
+    GestorEstados(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL);
+    void begin();
     void update();
 
 private:
@@ -19,6 +26,8 @@ private:
     DetectorEnemigo& detE;
     DetectorLinea& detL;
     Estado estadoActual;
+    unsigned long tiempoBusquedaInicio;
+    const unsigned long duracionBusqueda = 1000; // Duración de cada movimiento de búsqueda (en milisegundos)
 };
 
 #endif
