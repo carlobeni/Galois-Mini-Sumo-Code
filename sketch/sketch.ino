@@ -2,22 +2,6 @@
 #include "DetectorLinea.h"
 #include "ControlMovimiento.h"
 #include "GestorEstados.h"
-#include <IRremote.h>
-
-// Define del pin IR y los códigos de los botones
-#define RECV_PIN 11
-#define BUTTON_READY 0xA90
-#define BUTTON_START 0xA91
-#define BUTTON_STOP 0xA92
-enum ControllState
-{
-  STOPPED,
-  READY,
-  RUNNING
-};
-decode_results results;
-ControllState currentState = STOPPED;
-IRrecv irrecv(RECV_PIN);
 
 // Definición de pines para los motores
 #define M1_PWM 0 // AZUL
@@ -28,7 +12,7 @@ IRrecv irrecv(RECV_PIN);
 #define M2_INA 5  // VERDE
 #define M2_INB 16 // LILA
 
-ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB); 
+ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB);
 
 // Conector 1: 3 sensores de Enemigo
 // Conector 2: 3 sensores de Enemigo
@@ -44,39 +28,9 @@ DetectorLinea detL(pinSensoresL, numSensoresL);
 
 GestorEstados gestorEstados(controlMov, detE, detL);
 
-// Función para manejar los códigos recibidos del control remoto
-void handleIRCode(unsigned long code)
-{
-  switch (code)
-  {
-  case BUTTON_READY:
-    Serial.println("Click Ready");
-    currentState = READY;
-    break;
-
-  case BUTTON_START:
-    if (currentState == READY)
-    {
-      Serial.println("Click Start");
-      currentState = RUNNING;
-    }
-    break;
-
-  case BUTTON_STOP:
-    Serial.println("Click Stop");
-    currentState = STOPPED;
-    break;
-
-  default:
-    Serial.println("Unknown button click");
-    break;
-  }
-}
-
 void setup()
 {
   Serial.begin(9600);
-  irrecv.enableIRIn();
   detE.begin();
   detL.begin();
   controlMov.begin();
@@ -84,31 +38,39 @@ void setup()
 
 void loop()
 {
-
-  if (irrecv.decode(&results)) {
-    // Mostrar el valor recibido en formato HEX
-    Serial.print("IR code: 0x");
-    Serial.println(results.value, HEX);
-
-    // Manejar el código IR recibido
-    handleIRCode(results.value);
-
-    // Continuar escuchando para el siguiente código IR
-    irrecv.resume();
-  }
-
-  // Actualizar el estado del sumo según currentState
-  switch (currentState)
+  // Actualización de los sensores de enemigo
+  detE.update();
+  bool *estadosE = detE.getEstados();
+  Serial.print("Estados de los sensores de Enemigo: ");
+  for (uint8_t i = 0; i < numSensoresE; i++)
   {
-  case STOPPED:
+    Serial.print(estadosE[i]);
+    Serial.print(" ");
+  }
+  Serial.println();
+
+  // Actualización de los sensores de línea
+  detL.update();
+  bool *estadosL = detL.getEstados(0, 1000);
+  Serial.print("Estados de los sensores de Línea: ");
+  for (uint8_t i = 0; i < numSensoresL; i++)
+  {
+    Serial.print(estadosL[i]);
+    Serial.print(" ");
+  }
+  Serial.println();
+
+  // Control de los motores basado en los sensores de enemigo
+  if (estadosE[2] == 1 || estadosE[3] == 1)
+  {
+    Serial.print("FRONTAL DETECTADO");
+    controlMov.setBothMotorsSpeed(100, 100);
+    // controlMov.setMotor1Speed(100);
+    // controlMov.setMotor2Speed(100);
+  }
+  else
+  {
+    Serial.print("FRONTAL NO DETECTADO");
     controlMov.setBothMotorsSpeed(0, 0);
-    break;
-
-  case READY:
-    break;
-
-  case RUNNING:
-    gestorEstados.update();
-    break;
   }
 }
