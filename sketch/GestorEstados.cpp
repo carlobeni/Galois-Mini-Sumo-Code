@@ -85,14 +85,16 @@ void GestorEstados::update() {
             if (estadosL[0] && estadosL[1]) {
                 controlMov.atras(150);
                 delay(500);
-                estadoActual = INICIO;
+                estadoActual = DETECCION_LINEA;
             } else if (estadosL[0]) {
                 controlMov.giroDerecho(150);
                 delay(500);
-                estadoActual = INICIO;
+                estadoActual = DETECCION_LINEA;
             } else if (estadosL[1]) {
                 controlMov.giroIzquierdo(150);
                 delay(500);
+                estadoActual = DETECCION_LINEA;
+            }else{
                 estadoActual = INICIO;
             }
             break;
