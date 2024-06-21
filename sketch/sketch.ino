@@ -31,7 +31,6 @@ GestorEstados gestorEstados(controlMov, detE, detL);
 void setup()
 {
   Serial.begin(115200);
-  irrecv.enableIRIn();
   detE.begin();
   detL.begin();
   controlMov.begin();
