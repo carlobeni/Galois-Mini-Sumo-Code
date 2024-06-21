@@ -18,19 +18,19 @@ ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB);
 // Conector 2: 3 sensores de Enemigo
 // Conector 3: sensor enemigo trasero + 2 sensores QT
 
-const uint8_t numSensoresE = 8;
-uint8_t pinSensoresE[numSensoresE] = {32, 33, 25, 26, 27, 14, 36}; // Define pines de los sensores
+const uint8_t numSensoresE = 7;
+uint8_t pinSensoresE[numSensoresE] = {25, 33, 32, 26, 27, 14, 39}; // Define pines de los sensores
 DetectorEnemigo detE(pinSensoresE, numSensoresE);
 
 const uint8_t numSensoresL = 2;
-uint8_t pinSensoresL[numSensoresL] = {39, 34};
+uint8_t pinSensoresL[numSensoresL] = {34, 36};
 DetectorLinea detL(pinSensoresL, numSensoresL);
 
 GestorEstados gestorEstados(controlMov, detE, detL);
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   detE.begin();
   detL.begin();
   controlMov.begin();
@@ -38,7 +38,8 @@ void setup()
 
 void loop()
 {
-  // Actualización de los sensores de enemigo
+  /* 
+  //Actualización de los sensores de enemigo
   detE.update();
   bool *estadosE = detE.getEstados();
   Serial.print("Estados de los sensores de Enemigo: ");
@@ -48,7 +49,9 @@ void loop()
     Serial.print(" ");
   }
   Serial.println();
+  */
 
+  /*
   // Actualización de los sensores de línea
   detL.update();
   bool *estadosL = detL.getEstados(0, 1000);
@@ -60,7 +63,8 @@ void loop()
   }
   Serial.println();
 
-  // Control de los motores basado en los sensores de enemigo
+  /* 
+  //Control de los motores basado en los sensores de enemigo
   if (estadosE[2] == 1 || estadosE[3] == 1)
   {
     Serial.print("FRONTAL DETECTADO");
@@ -72,5 +76,5 @@ void loop()
   {
     Serial.print("FRONTAL NO DETECTADO");
     controlMov.setBothMotorsSpeed(0, 0);
-  }
+  }*/
 }

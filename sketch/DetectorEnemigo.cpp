@@ -16,6 +16,8 @@ void DetectorEnemigo::update() {
   for (uint8_t i = 0; i < _numSensores; i++) {
     _estados[i] = digitalRead(_pinSensores[i]);
   }
+
+  _estados[_numSensores-1]=!_estados[_numSensores-1];
 }
 
 bool* DetectorEnemigo::getEstados() {

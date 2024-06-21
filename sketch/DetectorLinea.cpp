@@ -24,6 +24,10 @@ uint16_t* DetectorLinea::getSensorValues() {
 bool* DetectorLinea::getEstados(uint16_t minWhite, uint16_t maxWhite) {
   bool* estados = new bool[num_sensores];
   for (uint8_t i = 0; i < num_sensores; i++) {
+    Serial.print(i);
+    Serial.print(") ");
+    Serial.print(sensorValues[i]);
+    Serial.print(" ");
     estados[i] = (sensorValues[i] >= minWhite && sensorValues[i] <= maxWhite) ? 1 : 0;
   }
   return estados;
