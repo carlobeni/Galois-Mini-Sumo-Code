@@ -28,18 +28,18 @@ IRrecv irrecv(RECV_PIN);
 #define M2_INA 5  // VERDE
 #define M2_INB 16 // LILA
 
-ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB); 
+ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB);
 
 // Conector 1: 3 sensores de Enemigo
 // Conector 2: 3 sensores de Enemigo
 // Conector 3: sensor enemigo trasero + 2 sensores QT
 
-const uint8_t numSensoresE = 8;
-uint8_t pinSensoresE[numSensoresE] = {32, 33, 25, 26, 27, 14, 36}; // Define pines de los sensores
+const uint8_t numSensoresE = 7;
+uint8_t pinSensoresE[numSensoresE] = {25, 33, 32, 26, 27, 14, 39}; // Define pines de los sensores
 DetectorEnemigo detE(pinSensoresE, numSensoresE);
 
 const uint8_t numSensoresL = 2;
-uint8_t pinSensoresL[numSensoresL] = {39, 34};
+uint8_t pinSensoresL[numSensoresL] = {34, 36};
 DetectorLinea detL(pinSensoresL, numSensoresL);
 
 GestorEstados gestorEstados(controlMov, detE, detL);
@@ -75,7 +75,7 @@ void handleIRCode(unsigned long code)
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   irrecv.enableIRIn();
   detE.begin();
   detL.begin();
