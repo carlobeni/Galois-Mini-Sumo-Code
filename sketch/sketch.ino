@@ -30,12 +30,8 @@ GestorEstados gestorEstados(controlMov, detE, detL);
 
 void setup()
 {
-<<<<<<< HEAD
   Serial.begin(115200);
   irrecv.enableIRIn();
-=======
-  Serial.begin(9600);
->>>>>>> bc365bfa18ab6991cf422ae50e8659a3dfb454b9
   detE.begin();
   detL.begin();
   controlMov.begin();
@@ -65,7 +61,7 @@ void loop()
   }
   Serial.println();
 
-  // Control de los motores basado en los sensores de enemigo
+  // Control de los motores con sensores frontales
   if (estadosE[2] == 1 || estadosE[3] == 1)
   {
     Serial.print("FRONTAL DETECTADO");
