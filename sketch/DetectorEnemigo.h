@@ -9,6 +9,7 @@ class DetectorEnemigo {
     void begin();
     void update();
     bool* getEstados();
+    void string(char* buffer, size_t bufferSize); 
 
   private:
     uint8_t* _pinSensores;

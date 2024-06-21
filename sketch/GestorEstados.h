@@ -20,6 +20,7 @@ public:
     GestorEstados(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL);
     void begin();
     void update();
+    void string(char* buffer, size_t bufferSize);
 
 private:
     ControlMovimiento& controlMov;
@@ -28,6 +29,15 @@ private:
     Estado estadoActual;
     unsigned long tiempoBusquedaInicio;
     const unsigned long duracionBusqueda = 1000; // Duración de cada movimiento de búsqueda (en milisegundos)
+    const char* nombresEstados[7] = {
+        "INICIO",
+        "BUSQUEDA",
+        "ALINEACION",
+        "AVANCE",
+        "ATAQUE RAPIDO",
+        "DETECCION DE LINEA",
+        "GIRO Y ATAQUE"
+    };
 };
 
 #endif

@@ -63,18 +63,10 @@ void loop()
   }
   Serial.println();
 
-  /* 
-  //Control de los motores basado en los sensores de enemigo
-  if (estadosE[2] == 1 || estadosE[3] == 1)
-  {
-    Serial.print("FRONTAL DETECTADO");
-    controlMov.setBothMotorsSpeed(100, 100);
-    // controlMov.setMotor1Speed(100);
-    // controlMov.setMotor2Speed(100);
-  }
-  else
-  {
-    Serial.print("FRONTAL NO DETECTADO");
-    controlMov.setBothMotorsSpeed(0, 0);
-  }*/
+  */
+  gestorEstados.update();
+  char buffer[300];
+  gestorEstados.string(buffer, sizeof(buffer));
+  Serial.println(buffer);
+
 }

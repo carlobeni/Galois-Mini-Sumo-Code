@@ -8,12 +8,14 @@ public:
     MotorDriver(uint8_t pwmPin, uint8_t inaPin, uint8_t inbPin);
     void begin();
     void setSpeed(int speed);
+    int getLastSpeed() const;
 
 private:
     uint8_t _pwmPin;
     uint8_t _inaPin;
     uint8_t _inbPin;
     bool _forward = true;
+    int _lastSpeed = 0;
 };
 
 class ControlMovimiento {
@@ -30,6 +32,7 @@ public:
     void setMotor1Speed(int potencia);
     void setMotor2Speed(int potencia);
     void setBothMotorsSpeed(int potencia1, int potencia2);
+    void string(char* buffer, size_t bufferSize) const;
 
 private:
     MotorDriver motor1;

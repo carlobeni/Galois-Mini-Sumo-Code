@@ -108,3 +108,26 @@ void GestorEstados::update() {
 
     //delay(50);  
 }
+
+void GestorEstados::string(char* buffer, size_t bufferSize) {
+    bool* estadosE = detE.getEstados();
+    bool* estadosL = detL.getEstados(0, 1000);
+
+    char bufferSE[50];
+    detE.string(bufferSE, sizeof(bufferSE));
+
+    char bufferSL[50];
+    detL.string(bufferSL, sizeof(bufferSL));
+
+    char bufferMotores[50];
+    controlMov.string(bufferMotores, sizeof(bufferMotores));
+
+    size_t index = 0;
+    index += snprintf(buffer + index, bufferSize - index, "-------------------------------\n");
+    index += snprintf(buffer + index, bufferSize - index, "ESTADO: %s\n", nombresEstados[estadoActual]);
+    index += snprintf(buffer + index, bufferSize - index, "SE: %s\n", bufferSE);
+    index += snprintf(buffer + index, bufferSize - index, "SL: %s\n", bufferSL);
+    index += snprintf(buffer + index, bufferSize - index, "MOTORES: %s\n", bufferMotores);
+    index += snprintf(buffer + index, bufferSize - index, "-------------------------------\n\n");
+    buffer[index] = '\0'; // Null terminator
+}

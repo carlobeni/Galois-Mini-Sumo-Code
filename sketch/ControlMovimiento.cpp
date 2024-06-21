@@ -1,5 +1,7 @@
 #include "ControlMovimiento.h"
 
+// Implementación de MotorDriver
+
 MotorDriver::MotorDriver(uint8_t pwmPin, uint8_t inaPin, uint8_t inbPin)
   : _pwmPin(pwmPin), _inaPin(inaPin), _inbPin(inbPin) {}
 
@@ -21,8 +23,14 @@ void MotorDriver::setSpeed(int speed) {
         _forward = false;
     }
     analogWrite(_pwmPin, speed);
+    _lastSpeed = _forward ? speed : -speed;
 }
 
+int MotorDriver::getLastSpeed() const {
+    return _lastSpeed;
+}
+
+// Implementación de ControlMovimiento
 ControlMovimiento::ControlMovimiento(uint8_t pwm1, uint8_t ina1, uint8_t inb1,
                                      uint8_t pwm2, uint8_t ina2, uint8_t inb2)
   : motor1(pwm1, ina1, inb1), motor2(pwm2, ina2, inb2) {}
@@ -64,3 +72,10 @@ void ControlMovimiento::setBothMotorsSpeed(int potencia1, int potencia2) {
     motor1.setSpeed(potencia1);
     motor2.setSpeed(potencia2);
 }
+
+void ControlMovimiento::string(char* buffer, size_t bufferSize) const {
+    size_t index = 0;
+    index += snprintf(buffer + index, bufferSize - index, "M0: %d, M1: %d", motor1.getLastSpeed(), motor2.getLastSpeed());
+    buffer[index] = '\0'; // Null terminator
+}
+
