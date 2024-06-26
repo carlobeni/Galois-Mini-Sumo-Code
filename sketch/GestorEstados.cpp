@@ -96,9 +96,9 @@ void GestorEstados::update() {
 
         case GIRO_Y_ATAQUE:
             controlMov.giroDerecho(200);
-            delay(1000); // Ajusta este valor según sea necesario para un giro de 180 grados
+            //delay(1000); // Ajusta este valor según sea necesario para un giro de 180 grados
             controlMov.adelante(200); // Ataque rápido después de girar
-            delay(500); // Duración del ataque
+            //delay(500); // Duración del ataque
             estadoActual = INICIO;
             break;
     }
