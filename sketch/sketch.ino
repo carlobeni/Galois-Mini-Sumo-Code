@@ -41,12 +41,14 @@ void loop()
 {
 
   //Detector de Enemigo
-  detE.string(buffer, sizeof(buffer));
-  Serial.println(buffer);
+  char bufferE[300];
+  detE.string(bufferE, sizeof(bufferE));
+  Serial.println(bufferE);
 
   //Detector de Linea
-  detL.string(buffer, sizeof(buffer));
-  Serial.println(buffer);
+  char bufferL[300];
+  detL.string(bufferL, sizeof(bufferL));
+  Serial.println(bufferL);
 
   //Cargado por Serial
   /*
