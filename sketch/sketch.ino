@@ -5,12 +5,12 @@
 
 // Definición de pines para los motores
 #define M1_INA 18 // VERDE
-#define M1_INB 19 // LILA
-#define M1_PWM 21 // AZUL
+#define M1_PWM 19 // AZUL
+#define M1_INB 21 // LILA
 
 #define M2_INB 16 // LILA
 #define M2_PWM 17 // AZUL
-#define M2_INA 5 // VERDE
+#define M2_INA 5  // VERDE
 
 ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB);
 
@@ -27,7 +27,7 @@ const uint8_t numSensoresL = 2;
 uint8_t pinSensoresL[numSensoresL] = {39, 35};
 DetectorLinea detL(pinSensoresL, numSensoresL);
 
-//GestorEstados gestorEstados(controlMov, detE, detL);
+// GestorEstados gestorEstados(controlMov, detE, detL);
 
 void setup()
 {
@@ -39,45 +39,27 @@ void setup()
 
 void loop()
 {
-  /*
-  //Actualización de los sensores de enemigo
-  detE.update();
-  bool *estadosE = detE.getEstados();
-  Serial.print("Estados de los sensores de Enemigo: ");
-  for (uint8_t i = 0; i < numSensoresE; i++)
-  {
-    Serial.print(estadosE[i]);
-    Serial.print(" ");
-  }
-  Serial.println();
 
-  
-  // Actualización de los sensores de línea
-  detL.update();
-  bool *estadosL = detL.getEstados(0, 1000);
-  Serial.print("Estados de los sensores de Línea: ");
-  for (uint8_t i = 0; i < numSensoresL; i++)
-  {
-    Serial.print(estadosL[i]);
-    Serial.print(" ");
+  //Detector de Enemigo
+  detE.string(buffer, sizeof(buffer));
+  Serial.println(buffer);
+
+  //Detector de Linea
+  detL.string(buffer, sizeof(buffer));
+  Serial.println(buffer);
+
+  //Cargado por Serial
+  /*
+  if (Serial.available() > 0) {
+    int potencia = Serial.parseInt();
+    controlMov.setBothMotorsSpeed(potencia, potencia);
+    char buffer[50];
+    controlMov.string(buffer, sizeof(buffer));
+    Serial.println(buffer);
+    delay(10*1000);
   }
-  Serial.println();
   */
 
-  // Control de los motores basado en los sensores de enemigo
-  // Motor 0: primero
-  // Motor 1: segundo (feo)
-  // controlMov.setBothMotorsSpeed(20, 20);
-  // delay(100);
-  
-  
-  for(int i=10; i<=60; i++){
-    controlMov.setBothMotorsSpeed(i, i);
-    Serial.println(i);
-    delay(3000);
-  }
-  
-  
   /*
   gestorEstados.update();
   char buffer[300];
