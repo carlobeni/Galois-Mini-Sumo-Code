@@ -27,7 +27,7 @@ const uint8_t numSensoresL = 2;
 uint8_t pinSensoresL[numSensoresL] = {39, 35};
 DetectorLinea detL(pinSensoresL, numSensoresL);
 
-// GestorEstados gestorEstados(controlMov, detE, detL);
+GestorEstados gestorEstados(controlMov, detE, detL);
 
 void setup()
 {
@@ -38,34 +38,10 @@ void setup()
 }
 
 void loop()
-{
-
-  //Detector de Enemigo
-  char bufferE[300];
-  detE.string(bufferE, sizeof(bufferE));
-  Serial.println(bufferE);
-
-  //Detector de Linea
-  char bufferL[300];
-  detL.string(bufferL, sizeof(bufferL));
-  Serial.println(bufferL);
-
-  //Cargado por Serial
-  /*
-  if (Serial.available() > 0) {
-    int potencia = Serial.parseInt();
-    controlMov.setBothMotorsSpeed(potencia, potencia);
-    char buffer[50];
-    controlMov.string(buffer, sizeof(buffer));
-    Serial.println(buffer);
-    delay(10*1000);
-  }
-  */
-
-  /*
+{ 
   gestorEstados.update();
   char buffer[300];
   gestorEstados.string(buffer, sizeof(buffer));
   Serial.println(buffer);
-  */
+  
 }

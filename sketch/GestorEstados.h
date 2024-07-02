@@ -6,13 +6,14 @@
 #include "DetectorLinea.h"
 
 enum Estado {
-    INICIO,
-    BUSQUEDA,
-    ALINEACION,
-    AVANCE,
-    ATAQUE_RAPIDO,
-    DETECCION_LINEA,
-    GIRO_Y_ATAQUE
+        INICIO,
+        BUSQUEDA,
+        ADELANTE,
+        ADELANTE_RAPIDO,
+        ATRAS,
+        GIRO_IZQUIERDA,
+        TALADRO,
+        GIRO_DERECHA
 };
 
 class GestorEstados {
@@ -27,16 +28,19 @@ private:
     DetectorEnemigo& detE;
     DetectorLinea& detL;
     Estado estadoActual;
-    unsigned long tiempoBusquedaInicio;
+    Estado estadoAnterior;
+    int bandera = 0;
+    unsigned long tiempo;
     const unsigned long duracionBusqueda = 1000; // Duración de cada movimiento de búsqueda (en milisegundos)
-    const char* nombresEstados[7] = {
+    const char* nombresEstados[8] = {
         "INICIO",
         "BUSQUEDA",
-        "ALINEACION",
-        "AVANCE",
-        "ATAQUE RAPIDO",
-        "DETECCION DE LINEA",
-        "GIRO Y ATAQUE"
+        "ADEALNTE",
+        "ADEALNTE_RAPIDO",
+        "ATRAS",
+        "TALADRO",
+        "GIRO_IZQUIERDA",
+        "GIRO_DERECHA"
     };
 };
 

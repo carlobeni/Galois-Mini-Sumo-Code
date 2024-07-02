@@ -1,7 +1,7 @@
 #include "GestorEstados.h"
 
 GestorEstados::GestorEstados(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL)
-    : controlMov(controlMov), detE(detE), detL(detL), estadoActual(INICIO), tiempoBusquedaInicio(0) {}
+    : controlMov(controlMov), detE(detE), detL(detL), estadoActual(INICIO), estadoAnterior(INICIO), tiempo(0) {}
 
 void GestorEstados::begin() {
     detE.begin();
@@ -18,92 +18,248 @@ void GestorEstados::update() {
 
     switch (estadoActual) {
         case INICIO:
-            if (sensorL[0] || sensorL[1]) {
-                estadoActual = DETECCION_LINEA;
-            }else if (sensorE[2] == 1 || sensorE[3] == 1 || sensorE[0] == 1 || sensorE[1] == 1 || sensorE[4] == 1 || sensorE[5] == 1) {
-                estadoActual = ALINEACION;
-            } else if (sensorE[6] == 1) {
-                estadoActual = GIRO_Y_ATAQUE;
-            } else {
-                estadoActual = BUSQUEDA;
-                tiempoBusquedaInicio = millis(); // Inicializa el ciclo de búsqueda
-            }
-            break;
+            controlMov.adelante(0);
+            delay(5000);
 
-        case BUSQUEDA:
-            if (millis() - tiempoBusquedaInicio < duracionBusqueda) {
-                controlMov.adelante(20); // Mover hacia adelante
-            } else if (millis() - tiempoBusquedaInicio < 2 * duracionBusqueda) {
-                controlMov.atras(20); // Mover hacia atrás
-            } else {
-                tiempoBusquedaInicio = millis(); // Reiniciar el ciclo de búsqueda
+            if (sensorE[2] == 1 || sensorE[3] == 1){
+                estadoActual = ADELANTE;
+                estadoAnterior = INICIO;
+                tiempo = millis();
+            }
+
+            else if (sensorE[0] == 1 || sensorE[1] == 1 && sensorE[2] == 0 && sensorE[3] == 0){
+                estadoActual = GIRO_IZQUIERDA;
+                estadoAnterior = INICIO;
+                tiempo = millis();
+            }  
+
+            else if (sensorE[4] == 1 || sensorE[5] == 1 && sensorE[2] == 0 && sensorE[3] == 0){
+                estadoActual = GIRO_DERECHA;
+                estadoAnterior = INICIO;
+                tiempo = millis();
+            }
+
+            else if (millis() - tiempo > 10000 ){
+                estadoActual = BUSQUEDA;
+                estadoAnterior = INICIO;
+                tiempo = millis();
+            }
+        break;
+
+        case ADELANTE:
+            controlMov.adelante(40);
+
+            if (sensorL[0] == 1 || sensorL[1] == 1){
+                estadoActual = ATRAS;
+                estadoAnterior = ADELANTE;
+            }
+
+            else if (sensorE[0] == 0 && sensorE[1] == 0 && sensorE[2] == 0 && sensorE[3] == 0 && sensorE[4] == 0 && sensorE[5] == 0){
+                estadoActual = BUSQUEDA;
+                estadoAnterior = ADELANTE;
+                tiempo = millis();
+            }
+
+            else if ((sensorE[0] == 1 || sensorE[1] == 1) && sensorE[2] == 0 && sensorE[3] == 0){
+                estadoActual = GIRO_IZQUIERDA;
+                estadoAnterior = ADELANTE;
+                tiempo = millis();
+            }  
+
+            else if ((sensorE[4] == 1 || sensorE[5] == 1) && sensorE[2] == 0 && sensorE[3] == 0 ){
+                estadoActual = GIRO_DERECHA;
+                estadoAnterior = ADELANTE;
+                tiempo = millis();
+            }
+
+            else if (millis() - tiempo> 50000 ){
+                estadoActual = ADELANTE_RAPIDO;
+                estadoAnterior = ADELANTE;
+                tiempo = millis();
+            }            
+        break;
+
+        case ADELANTE_RAPIDO:
+            controlMov.adelante(20);
+            if (sensorL[0] == 1 && sensorL[1] == 1){
+                estadoActual = ATRAS;
+                estadoAnterior = ADELANTE_RAPIDO;
+            }
+
+            else if (sensorE[0] == 0 && sensorE[1] == 0 && sensorE[2] == 0 && sensorE[3] == 0 && sensorE[4] == 0 && sensorE[5] == 0){
+                estadoActual = BUSQUEDA;
+                estadoAnterior = ADELANTE_RAPIDO;
+            }
+
+            else if ((sensorE[0] == 1 || sensorE[1] == 1) && sensorE[4] == 0 && sensorE[5] == 0 && sensorE[6] == 0){
+                estadoActual = GIRO_IZQUIERDA;
+                estadoAnterior = ADELANTE_RAPIDO;
+                tiempo = millis();
+            }  
+
+            else if ((sensorE[4] == 1 || sensorE[5] == 1) && sensorE[0] == 0 && sensorE[1] == 0 && sensorE[2] == 0){
+                estadoActual = GIRO_DERECHA;
+                estadoAnterior = ADELANTE_RAPIDO;
+                tiempo = millis();
+            }
+        break;
+      
+            case GIRO_IZQUIERDA:
+
+              controlMov.giroIzquierdo(20);
+              
+              if (sensorL[0] == 1 || sensorL[1] == 1){
+                  estadoActual = ATRAS;
+                  estadoAnterior = GIRO_IZQUIERDA;
+              }
+              
+              else if (sensorE[2] == 1 && sensorE[3] == 1){
+                  estadoActual = ADELANTE;
+                  estadoAnterior = GIRO_IZQUIERDA;
+                  tiempo = millis();
+              }
+
+              else if (sensorE[4] == 1 && sensorE[5] == 1){
+                  estadoActual = GIRO_DERECHA;
+                  estadoAnterior = GIRO_IZQUIERDA;
+                  tiempo = millis();
+              }
+
+              else if (sensorE[0] == 0 && sensorE[1] == 0 && sensorE[2] == 0 && sensorE[3] == 0 && sensorE[4] == 0 && sensorE[5] == 0){
+                estadoActual = BUSQUEDA;
+                estadoAnterior = ADELANTE;
+                tiempo = millis();
+            }
+        break;
+
+            case GIRO_DERECHA:
+            controlMov.giroDerecho(20);
+            if (sensorL[0] == 1 || sensorL[1] == 1){
+                estadoActual = ATRAS;
+                estadoAnterior = GIRO_DERECHA;
+            }
+
+            else if (sensorE[2] == 1 && sensorE[3] == 1){
+                estadoActual = ADELANTE;
+                estadoAnterior = GIRO_DERECHA;
+                tiempo = millis();
+            }
+
+            else if (sensorE[0] == 1 && sensorE[1] == 1){
+                estadoActual = GIRO_IZQUIERDA;
+                estadoAnterior = GIRO_DERECHA;
+                tiempo = millis();
+            }
+
+            else if (sensorE[0] == 0 && sensorE[1] == 0 && sensorE[2] == 0 && sensorE[3] == 0 && sensorE[4] == 0 && sensorE[5] == 0){
+                estadoActual = BUSQUEDA;
+                estadoAnterior = ADELANTE;
+                tiempo = millis();
+            }
+
+        break;
+
+            case ATRAS:
+            controlMov.atras(30);
+            if(sensorL[0] == 0 && sensorL[1] == 0 && (estadoAnterior == ADELANTE || estadoAnterior == ADELANTE_RAPIDO)){
+                estadoActual = GIRO_DERECHA;
+                estadoAnterior = ATRAS;
+                tiempo = millis();
             }
             
-            //OBS: No se vuelve al estado INICIO porque el tiempo de busqueda podria reiniciarse 
-            if (sensorL[0] || sensorL[1]) {
-                estadoActual = DETECCION_LINEA;
-            }else if (sensorE[2] == 1 || sensorE[3] == 1 || sensorE[0] == 1 || sensorE[1] == 1 || sensorE[4] == 1 || sensorE[5] == 1) {
-                estadoActual = ALINEACION;
-            } else if (sensorE[6] == 1) {
-                estadoActual = GIRO_Y_ATAQUE;
+            else if(sensorL[0] == 0 && sensorL[1] == 0 && estadoAnterior == GIRO_IZQUIERDA){
+                estadoActual = GIRO_DERECHA;
+                estadoAnterior = ATRAS;
+                tiempo = millis();
             }
+
+            else if(sensorL[0] == 0 && sensorL[1] == 0){
+                estadoActual = GIRO_IZQUIERDA;
+                estadoAnterior = ATRAS;
+                tiempo = millis();
+            }
+        break;
+
+
+        case TALADRO:
+
+            if (sensorL[0] == 1 || sensorL[1] == 1 && sensorE[0] == 0 && sensorE[1] == 0 && sensorE[2] == 0 && sensorE[3] == 0 && sensorE[4] == 0 && sensorE[5] == 0){
+                estadoActual = ATRAS;
+                estadoAnterior = TALADRO;
+                tiempo = millis();
+            }
+
+            else if (sensorE[0] == 0 && sensorE[1] == 0 && (sensorE[2] == 1 && sensorE[3] == 1) && sensorE[4] == 0 && sensorE[5] == 0){
+                estadoActual = ADELANTE;
+                estadoAnterior = TALADRO;
+                tiempo = millis();
+            }
+
+            else if (sensorE[0] == 0 && sensorE[1] == 0 && sensorE[2] == 0 && (sensorE[3] == 1 || sensorE[4] == 1 || sensorE[5] == 1)){
+                estadoActual = GIRO_IZQUIERDA;
+                estadoAnterior = TALADRO;
+                tiempo = millis();
+            }
+
+            else if ((sensorE[0] == 1 && sensorE[1] == 1 && sensorE[2] == 1) && sensorE[3] == 0 && sensorE[4] == 0 && sensorE[5] == 0){
+                estadoActual = GIRO_DERECHA;
+                estadoAnterior = TALADRO;
+                tiempo = millis();
+            }
+
+
+           else  if (millis() - tiempo < 500) {
+                controlMov.adelante(20); // Mover hacia adelante
+            } 
+            else if (millis() - tiempo < 500) {
+                controlMov.atras(20); // Mover hacia atrás
+            } 
+            else {
+                tiempo = millis(); // Reiniciar el ciclo de búsqueda
+            }
+
             break;
 
-        case ALINEACION:
-            if (sensorE[2] == 1 || sensorE[3] == 1) {
-                estadoActual = AVANCE;
-            } else if (sensorE[0] == 1 || sensorE[1] == 1) {
-                controlMov.giroIzquierdo(15);
-            } else if (sensorE[4] == 1 || sensorE[5] == 1) {
-                controlMov.giroDerecho(15);
-            } else {
-                estadoActual = INICIO;
+
+        case BUSQUEDA:
+
+            if (sensorL[0] == 1 || sensorL[1] == 1){
+                estadoActual = ATRAS;
+                estadoAnterior = BUSQUEDA;
+                tiempo = millis();
             }
+
+
+            else if (sensorE[2] == 1 || sensorE[3] == 1){
+                estadoActual = ADELANTE;
+                estadoAnterior = BUSQUEDA;
+                tiempo = millis();
+            }
+
+            else if (sensorE[0] == 1 || sensorE[1] == 1 && sensorE[2] == 0 && sensorE[3] == 0){
+                estadoActual = GIRO_IZQUIERDA;
+                estadoAnterior = BUSQUEDA;
+                tiempo = millis();
+            }  
+
+            else if (sensorE[4] == 1 || sensorE[5] == 1 && sensorE[2] == 0 && sensorE[3] == 0){
+                estadoActual = GIRO_DERECHA;
+                estadoAnterior = BUSQUEDA;
+                tiempo = millis();
+            }
+           else  if (millis() - tiempo < 1000) {
+                controlMov.adelante(15); // Mover hacia adelante
+            } 
+            else if (millis() - tiempo < 2000) {
+                controlMov.atras(15); // Mover hacia atrás
+            } 
+            else {
+                tiempo = millis(); // Reiniciar el ciclo de búsqueda
+            }
+
             break;
 
-        case AVANCE:
-            if (sensorE[2] == 1 || sensorE[3] == 1) {
-                controlMov.adelante(20);
-                if (sensorE[2] == 1 && sensorE[3] == 1) {
-                    estadoActual = ATAQUE_RAPIDO;
-                }
-            } else {
-                estadoActual = ALINEACION;
-            }
-            break;
-
-        case ATAQUE_RAPIDO:
-            controlMov.adelante(25);
-            if (!(sensorE[2] == 1 && sensorE[3] == 1)) {
-                estadoActual = INICIO;
-            }
-            break;
-
-        case DETECCION_LINEA:
-            if (sensorL[0] && sensorL[1]) {
-                controlMov.atras(20);
-                //delay(500);
-            } else if (sensorL[0]) {
-                controlMov.giroDerecho(20);
-                //delay(500);
-            } else if (sensorL[1]) {
-                controlMov.giroIzquierdo(20);
-                //delay(500);
-            }else{
-                estadoActual = INICIO;
-            }
-            break;
-
-        case GIRO_Y_ATAQUE:
-            controlMov.giroDerecho(20);
-            //delay(1000); // Ajusta este valor según sea necesario para un giro de 180 grados
-            controlMov.adelante(20); // Ataque rápido después de girar
-            //delay(500); // Duración del ataque
-            estadoActual = INICIO;
-            break;
     }
-
-    //delay(50);  
 }
 
 void GestorEstados::string(char* buffer, size_t bufferSize) {
