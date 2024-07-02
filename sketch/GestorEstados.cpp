@@ -32,9 +32,9 @@ void GestorEstados::update() {
 
         case BUSQUEDA:
             if (millis() - tiempoBusquedaInicio < duracionBusqueda) {
-                controlMov.adelante(100); // Mover hacia adelante
+                controlMov.adelante(20); // Mover hacia adelante
             } else if (millis() - tiempoBusquedaInicio < 2 * duracionBusqueda) {
-                controlMov.atras(100); // Mover hacia atrás
+                controlMov.atras(20); // Mover hacia atrás
             } else {
                 tiempoBusquedaInicio = millis(); // Reiniciar el ciclo de búsqueda
             }
@@ -53,9 +53,9 @@ void GestorEstados::update() {
             if (sensorE[2] == 1 || sensorE[3] == 1) {
                 estadoActual = AVANCE;
             } else if (sensorE[0] == 1 || sensorE[1] == 1) {
-                controlMov.giroIzquierdo(50);
+                controlMov.giroIzquierdo(15);
             } else if (sensorE[4] == 1 || sensorE[5] == 1) {
-                controlMov.giroDerecho(50);
+                controlMov.giroDerecho(15);
             } else {
                 estadoActual = INICIO;
             }
@@ -63,7 +63,7 @@ void GestorEstados::update() {
 
         case AVANCE:
             if (sensorE[2] == 1 || sensorE[3] == 1) {
-                controlMov.adelante(150);
+                controlMov.adelante(20);
                 if (sensorE[2] == 1 && sensorE[3] == 1) {
                     estadoActual = ATAQUE_RAPIDO;
                 }
@@ -73,7 +73,7 @@ void GestorEstados::update() {
             break;
 
         case ATAQUE_RAPIDO:
-            controlMov.adelante(255);
+            controlMov.adelante(25);
             if (!(sensorE[2] == 1 && sensorE[3] == 1)) {
                 estadoActual = INICIO;
             }
@@ -81,13 +81,13 @@ void GestorEstados::update() {
 
         case DETECCION_LINEA:
             if (sensorL[0] && sensorL[1]) {
-                controlMov.atras(150);
+                controlMov.atras(20);
                 //delay(500);
             } else if (sensorL[0]) {
-                controlMov.giroDerecho(150);
+                controlMov.giroDerecho(20);
                 //delay(500);
             } else if (sensorL[1]) {
-                controlMov.giroIzquierdo(150);
+                controlMov.giroIzquierdo(20);
                 //delay(500);
             }else{
                 estadoActual = INICIO;
@@ -95,9 +95,9 @@ void GestorEstados::update() {
             break;
 
         case GIRO_Y_ATAQUE:
-            controlMov.giroDerecho(200);
+            controlMov.giroDerecho(20);
             //delay(1000); // Ajusta este valor según sea necesario para un giro de 180 grados
-            controlMov.adelante(200); // Ataque rápido después de girar
+            controlMov.adelante(20); // Ataque rápido después de girar
             //delay(500); // Duración del ataque
             estadoActual = INICIO;
             break;
