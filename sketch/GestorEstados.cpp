@@ -109,7 +109,7 @@ void GestorEstados::update() {
       
             case GIRO_IZQUIERDA:
 
-              controlMov.giroIzquierdo(20);
+              controlMov.giroIzquierdo(velocidadGiro);
               
               if (sensorL[0] == 1 || sensorL[1] == 1){
                   estadoActual = ATRAS;
@@ -136,7 +136,7 @@ void GestorEstados::update() {
         break;
 
             case GIRO_DERECHA:
-            controlMov.giroDerecho(20);
+            controlMov.giroDerecho(velocidadGiro);
             if (sensorL[0] == 1 || sensorL[1] == 1){
                 estadoActual = ATRAS;
                 estadoAnterior = GIRO_DERECHA;
@@ -163,7 +163,7 @@ void GestorEstados::update() {
         break;
 
             case ATRAS:
-            controlMov.atras(30);
+            controlMov.atras(velocidadAtras);
             if(sensorL[0] == 0 && sensorL[1] == 0 && (estadoAnterior == ADELANTE || estadoAnterior == ADELANTE_RAPIDO)){
                 estadoActual = GIRO_DERECHA;
                 estadoAnterior = ATRAS;
@@ -212,10 +212,10 @@ void GestorEstados::update() {
 
 
            else  if (millis() - tiempo < 500) {
-                controlMov.adelante(20); // Mover hacia adelante
+                controlMov.adelante(velocidadAdelanteNormal); // Mover hacia adelante
             } 
             else if (millis() - tiempo < 500) {
-                controlMov.atras(20); // Mover hacia atrás
+                controlMov.atras(velocidadAtras); // Mover hacia atrás
             } 
             else {
                 tiempo = millis(); // Reiniciar el ciclo de búsqueda
@@ -251,10 +251,10 @@ void GestorEstados::update() {
                 tiempo = millis();
             }
            else  if (millis() - tiempo < 1000) {
-                controlMov.adelante(15); // Mover hacia adelante
+                controlMov.adelante(velocidadAdelanteNormal); // Mover hacia adelante
             } 
             else if (millis() - tiempo < 2000) {
-                controlMov.atras(15); // Mover hacia atrás
+                controlMov.atras(velocidadAtras); // Mover hacia atrás
             } 
             else {
                 tiempo = millis(); // Reiniciar el ciclo de búsqueda

@@ -1,7 +1,7 @@
 #include "DetectorEnemigo.h"
 #include "DetectorLinea.h"
 #include "ControlMovimiento.h"
-#include "GestorEstados.h"
+#include "GestorEstadosAlpha.h"
 #include <IRremote.h>
 
 const int RECV_PIN = 13;
@@ -65,7 +65,7 @@ const uint8_t numSensoresL = 2;
 uint8_t pinSensoresL[numSensoresL] = {39, 35};
 DetectorLinea detL(pinSensoresL, numSensoresL);
 
-GestorEstados gestorEstados(controlMov, detE, detL);
+GestorEstadosAlpha gestorEstados(controlMov, detE, detL);
 
 void setup()
 {

@@ -32,7 +32,12 @@ private:
     Estado estadoAnterior;
     int bandera = 0;
     unsigned long tiempo;
-    const unsigned long duracionBusqueda = 1000; // Duración de cada movimiento de búsqueda (en milisegundos)
+    const unsigned long duracionEsperaEnemigo = 5000; 
+    const unsigned long duracionBusqueda = 1000; 
+    const unsigned int velocidadAdelanteRapido = 40;      
+    const unsigned int velocidadAdelanteNormal = 20;      
+    const unsigned int velocidadAtras = 30;               
+    const unsigned int velocidadGiro = 20;
     const char* nombresEstados[8] = {
         "INICIO",
         "BUSQUEDA",
