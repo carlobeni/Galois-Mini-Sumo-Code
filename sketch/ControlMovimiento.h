@@ -9,6 +9,7 @@ public:
     void begin();
     void setSpeed(int speed);
     int getLastSpeed() const;
+    void stop(int brake);
 
 private:
     uint8_t _pwmPin;
@@ -28,6 +29,7 @@ public:
     void atras(int potencia);
     void giroDerecho(int potencia);
     void giroIzquierdo(int potencia);
+    void stop(int brake);
 
     void setMotor1Speed(int potencia);
     void setMotor2Speed(int potencia);

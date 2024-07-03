@@ -10,6 +10,12 @@ void MotorDriver::begin() {
     pinMode(_inaPin, OUTPUT);
     pinMode(_inbPin, OUTPUT);
 }
+void MotorDriver::stop(int brake){
+  if (brake < 0) brake = -brake;
+  digitalWrite(_inaPin, LOW);
+  digitalWrite(_inbPin, LOW);
+  analogWrite(_pwmPin, brake);
+}
 
 void MotorDriver::setSpeed(int speed) {
     if (speed >= 0) {
@@ -38,6 +44,11 @@ ControlMovimiento::ControlMovimiento(uint8_t pwm1, uint8_t ina1, uint8_t inb1,
 void ControlMovimiento::begin() {
     motor1.begin();
     motor2.begin();
+}
+
+void ControlMovimiento::stop(int brake) {
+    motor1.stop(brake);
+    motor2.stop(brake);
 }
 
 void ControlMovimiento::adelante(int potencia) {

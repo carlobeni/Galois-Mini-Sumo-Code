@@ -21,6 +21,7 @@ public:
     GestorEstados(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL);
     void begin();
     void update();
+    void stop();
     void string(char* buffer, size_t bufferSize);
 
 private:

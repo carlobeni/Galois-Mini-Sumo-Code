@@ -9,6 +9,11 @@ void GestorEstados::begin() {
     controlMov.begin();
 }
 
+void GestorEstados::stop() {
+     estadoActual = INICIO;
+     controlMov.stop(60);
+}
+
 void GestorEstados::update() {
     detE.update();
     detL.update();
@@ -19,8 +24,6 @@ void GestorEstados::update() {
     switch (estadoActual) {
         case INICIO:
             controlMov.adelante(0);
-            delay(5000);
-
             if (sensorE[2] == 1 || sensorE[3] == 1){
                 estadoActual = ADELANTE;
                 estadoAnterior = INICIO;
