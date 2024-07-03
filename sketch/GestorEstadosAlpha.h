@@ -10,11 +10,11 @@ enum Estado {
     BUSQUEDA,
     ALINEACION,
     AVANCE,
-    ATAQUE_RAPIDO,
+    ATAQUE,
     DETECCION_DE_LINEA,
-    GIRO_180,
-    GIRO_IZQUIERDO_90,
-    GIRO_DERECHO_90
+    RETROCESO,
+    GIRO_DERECHO_180,
+    GIRO_IZQUIERDO_180
 };
 
 class GestorEstadosAlpha {
@@ -30,27 +30,40 @@ private:
     DetectorEnemigo& detE;
     DetectorLinea& detL;
     Estado estadoActual;
-    unsigned long tiempoBusquedaInicio;            
-    unsigned long tiempoGiroInicio;  // Tiempo de inicio del giro
-    unsigned long tiempoDeteccionLineaInicio; // Tiempo de inicio de detección de línea
+
+    const unsigned int potenciaBusqueda = 15;
     const unsigned int potenciaGiro = 20;
-    const unsigned int potenciaAdBusc = 20;
-    const unsigned int potenciaAtBusc = 15;
-    const unsigned int potenciaAdelante = 15;
-    const unsigned int potenciaAdelanteMax = 30;
-    const unsigned long duracionLoop = 150; // Duración de cada movimiento de búsqueda (en milisegundos)
+    const unsigned int potenciaAvance = 20;
+
+    unsigned long tiempoAtaqueInicio;
+    const unsigned int potenciaAtaqueAdelanteMax = 80;
+    const unsigned int potenciaAtaqueAdelanteMin = 20;
+    const unsigned int potenciaAtaqueAtras = 25;
+    const unsigned long duracionLoopAtaque = 150;
+    const unsigned int incrementoPotenciaAtaque = 10;
+    const unsigned long periodoIncrementoPotencia = 4000; // Periodo de incremento de potencia en milisegundos
+
+    unsigned long tiempoUltimoIncremento; // Tiempo del último incremento de potencia
+    unsigned int potenciaActualAtaque;    // Potencia actual de ataque
+
+    unsigned long tiempoGiroInicio;  // Tiempo de inicio del giro
+    const unsigned int potenciaGiro180 = 60;
     const unsigned long duracionGiro180 = 200; // Duración máxima del giro en milisegundos (ejemplo)
-    const unsigned long duracionDeteccionLinea = 50; // Duración máxima de la detección de línea en milisegundos (ejemplo)
-    const char* nombresEstados[9] = {
+
+    unsigned long tiempoRetrocesoInicio; // Tiempo de inicio de retroceso
+    const unsigned int potenciaRetroceso = 40;
+    const unsigned long duracionRetroceso = 200; // Duración del retroceso en milisegundos (ejemplo)
+
+    const char* nombresEstados[10] = {
         "INICIO",
         "BUSQUEDA",
         "ALINEACION",
         "AVANCE",
-        "ATAQUE RAPIDO",
+        "ATAQUE",
         "DETECCION DE LINEA",
-        "GIRO DE 180",
-        "GIRO IZQUIERDO 90",
-        "GIRO DERECHO 90"
+        "RETROCESO",
+        "GIRO DERECHO 180",
+        "GIRO IZQUIERDO 180"
     };
 };
 
