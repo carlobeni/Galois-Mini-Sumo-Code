@@ -48,11 +48,11 @@ private:
 
     unsigned long tiempoGiroInicio;  // Tiempo de inicio del giro
     const unsigned int potenciaGiro180 = 60;
-    const unsigned long duracionGiro180 = 200; // Duración máxima del giro en milisegundos (ejemplo)
+    const unsigned long duracionGiro180 = 120; // Duración máxima del giro en milisegundos (ejemplo)
 
     unsigned long tiempoRetrocesoInicio; // Tiempo de inicio de retroceso
     const unsigned int potenciaRetroceso = 40;
-    const unsigned long duracionRetroceso = 200; // Duración del retroceso en milisegundos (ejemplo)
+    const unsigned long duracionRetroceso = 500; // Duración del retroceso en milisegundos (ejemplo)
 
     const char* nombresEstados[10] = {
         "INICIO",

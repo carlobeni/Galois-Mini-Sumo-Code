@@ -70,7 +70,7 @@ const uint8_t numSensoresL = 2;
 uint8_t pinSensoresL[numSensoresL] = {39, 35};
 DetectorLinea detL(pinSensoresL, numSensoresL);
 
-GestorEstadosAlpha gestorEstados(controlMov, detE, detL);
+GestorEstadosAlpha gestorEstadosAlpha(controlMov, detE, detL);
 
 const char* ssid    = "PROFESORES";
 const char* password = "profeFIUNA#2024";
@@ -132,7 +132,7 @@ void setup()
   detE.begin();
   detL.begin();
   controlMov.begin();
-  gestorEstados.begin();
+  gestorEstadosAlpha.begin();
   irrecv.enableIRIn();
 }
 
@@ -151,14 +151,14 @@ void loop()
   // Activacion/Desactivacion del Gestor de Estados
   if (currentStateIR == Start)
   {
-    gestorEstados.update();
+    gestorEstadosAlpha.update();
     char buffer[300];
-    gestorEstados.string(buffer, sizeof(buffer));
+    gestorEstadosAlpha.string(buffer, sizeof(buffer));
     Serial.println(buffer);
   }
   else
   {
-    gestorEstados.stop();
+    gestorEstadosAlpha.stop();
   }
 }
 
