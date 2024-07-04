@@ -36,7 +36,7 @@ private:
     const unsigned int potenciaAvance = 20;
 
     unsigned long tiempoAtaqueInicio;
-    const unsigned int potenciaAtaqueAdelanteMax = 80;
+    const unsigned int potenciaAtaqueAdelanteMax = 150;
     const unsigned int potenciaAtaqueAdelanteMin = 20;
     const unsigned int potenciaAtaqueAtras = 25;
     const unsigned long duracionLoopAtaque = 150;
@@ -48,7 +48,7 @@ private:
 
     unsigned long tiempoGiroInicio;  // Tiempo de inicio del giro
     const unsigned int potenciaGiro180 = 60;
-    const unsigned long duracionGiro180 = 120; // Duración máxima del giro en milisegundos (ejemplo)
+    const unsigned long duracionGiro180 = 150; // Duración máxima del giro en milisegundos (ejemplo)
 
     unsigned long tiempoRetrocesoInicio; // Tiempo de inicio de retroceso
     const unsigned int potenciaRetroceso = 40;
