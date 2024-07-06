@@ -29,6 +29,8 @@ public:
     void atras(int potencia);
     void giroDerecho(int potencia);
     void giroIzquierdo(int potencia);
+    void giroAntihorarioAxisM1(int potencia); 
+    void giroHorarioAxisM2(int potencia); 
     void stop(int brake);
 
     void setMotor1Speed(int potencia);

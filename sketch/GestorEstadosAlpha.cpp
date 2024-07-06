@@ -1,7 +1,7 @@
 #include "GestorEstadosAlpha.h"
 
 GestorEstadosAlpha::GestorEstadosAlpha(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL)
-    : controlMov(controlMov), detE(detE), detL(detL), estadoActual(INICIO), tiempoAtaqueInicio(0), tiempoGiroInicio(0), tiempoRetrocesoInicio(0) {}
+    : controlMov(controlMov), detE(detE), detL(detL), estadoActual(INICIO), tiempoAtaqueBajo(0),tiempoAtaqueAlto(0), tiempoGiroInicio(0),tiempoGiroAtaqueInicio(0), tiempoRetrocesoInicio(0) {}
 
 void GestorEstadosAlpha::begin() {
     detE.begin();
@@ -23,7 +23,7 @@ void GestorEstadosAlpha::update() {
 
     switch (estadoActual) {
         case INICIO:
-            if (sensorL[1] || sensorL[1]) {
+            if (sensorL[0] || sensorL[1]) {
                 estadoActual = DETECCION_DE_LINEA;
             } else if (sensorE[2] == 1 || sensorE[3] == 1 || sensorE[0] == 1 || sensorE[1] == 1 || sensorE[4] == 1 || sensorE[5] == 1) {
                 estadoActual = ALINEACION;
@@ -56,35 +56,46 @@ void GestorEstadosAlpha::update() {
             if (sensorE[2] == 1 || sensorE[3] == 1) {
                 controlMov.adelante(potenciaAvance);
                 if (sensorE[2] == 1 && sensorE[3] == 1) {
-                    estadoActual = ATAQUE;
-                    tiempoAtaqueInicio = millis();
+                    estadoActual = ATAQUE_BAJO;
+                    tiempoAtaqueBajo = millis();
                 }
             } else {
                 estadoActual = ALINEACION;
             }
             break;
 
-        case ATAQUE:
-            if (millis() - tiempoAtaqueInicio < duracionLoopAtaque) {
-                controlMov.adelante(potenciaActualAtaque); // Mover hacia adelante
-            } else if (millis() - tiempoAtaqueInicio < 2 * duracionLoopAtaque) {
-                controlMov.atras(potenciaAtaqueAtras); // Mover hacia atrás
+        case ATAQUE_BAJO:
+            if (millis() - tiempoAtaqueBajo < duracionAtaqueBajo) {
+                controlMov.adelante(potenciaAtaqueBajo); // Mover hacia adelante
             } else {
-                tiempoAtaqueInicio = millis(); // Reiniciar el ciclo de ataque
+                estadoActual = ATAQUE_ALTO;
+                tiempoAtaqueAlto = millis();
             }
-
-            if (millis() - tiempoUltimoIncremento > periodoIncrementoPotencia) {
-                potenciaActualAtaque += incrementoPotenciaAtaque;
-                if (potenciaActualAtaque > potenciaAtaqueAdelanteMax) {
-                    potenciaActualAtaque = potenciaAtaqueAdelanteMin; // Reiniciar a potencia mínima
-                }
-                tiempoUltimoIncremento = millis(); // Reiniciar el tiempo del último incremento
-            }
-
             if (sensorL[0] || sensorL[1]) {
                 estadoActual = DETECCION_DE_LINEA;
                 tiempoRetrocesoInicio = millis(); // Inicializar el tiempo de retroceso
-            } else if (sensorE[2] == 1 || sensorE[3] == 1 || sensorE[0] == 1 || sensorE[1] == 1 || sensorE[4] == 1 || sensorE[5] == 1) {
+            } else if ((sensorE[2] == 0 && sensorE[3] == 0) && (sensorE[0] == 1 || sensorE[1] == 1 || sensorE[4] == 1 || sensorE[5] == 1)) {
+                estadoActual = ALINEACION;
+            } else if (sensorE[6] == 1) {
+                estadoActual = GIRO_DERECHO_180;
+                tiempoGiroInicio = millis(); // Inicializar el tiempo de giro
+            }
+            if (!(sensorE[2] == 1 && sensorE[3] == 1)) {
+                estadoActual = INICIO;
+            }
+            break;
+        
+        case ATAQUE_ALTO:
+            if (millis() - tiempoAtaqueAlto < duracionAtaqueAlto) {
+                controlMov.adelante(potenciaAtaqueAlto); // Mover hacia adelante
+            } else {
+                tiempoGiroAtaqueInicio = millis(); // Inicializar el tiempo de giro
+                estadoActual = GIRO_EN_ATAQUE;
+            }
+            if (sensorL[0] || sensorL[1]) {
+                estadoActual = DETECCION_DE_LINEA;
+                tiempoRetrocesoInicio = millis(); // Inicializar el tiempo de retroceso
+            } else if ((sensorE[2] == 0 && sensorE[3] == 0) && (sensorE[0] == 1 || sensorE[1] == 1 || sensorE[4] == 1 || sensorE[5] == 1)) {
                 estadoActual = ALINEACION;
             } else if (sensorE[6] == 1) {
                 estadoActual = GIRO_DERECHO_180;
@@ -120,19 +131,33 @@ void GestorEstadosAlpha::update() {
             }
             break;
 
+        case GIRO_EN_ATAQUE:
+            if (millis() - tiempoGiroAtaqueInicio < duracionGiroAtaque) {
+                controlMov.giroAntihorarioAxisM1(potenciaGiroAtaque);
+            } else {
+                estadoActual = ATAQUE_BAJO;
+            }
+            break;
+
         case GIRO_DERECHO_180:
-            if (millis() - tiempoGiroInicio < duracionGiro180) {
+            if (millis() - tiempoGiroInicio < duracionGiro180 * 0.7) {
                 controlMov.giroDerecho(potenciaGiro180);
             } else {
-                estadoActual = INICIO;
+                controlMov.stop(100);
+                if (millis() - tiempoGiroInicio >= duracionGiro180) {
+                    estadoActual = INICIO;
+                }
             }
             break;
 
         case GIRO_IZQUIERDO_180:
-            if (millis() - tiempoGiroInicio < duracionGiro180) {
+            if (millis() - tiempoGiroInicio < duracionGiro180 * 0.5) {
                 controlMov.giroIzquierdo(potenciaGiro180);
             } else {
-                estadoActual = INICIO;
+                controlMov.stop(100);
+                if (millis() - tiempoGiroInicio >= duracionGiro180) {
+                    estadoActual = INICIO;
+                }
             }
             break;
     }

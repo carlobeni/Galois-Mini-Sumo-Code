@@ -10,11 +10,14 @@ enum Estado {
     BUSQUEDA,
     ALINEACION,
     AVANCE,
-    ATAQUE,
+    ATAQUE_BAJO,
+    ATAQUE_ALTO,
     DETECCION_DE_LINEA,
     RETROCESO,
     GIRO_DERECHO_180,
-    GIRO_IZQUIERDO_180
+    GIRO_IZQUIERDO_180,
+    GIRO_EN_ATAQUE,
+    TALADRO
 };
 
 class GestorEstadosAlpha {
@@ -33,15 +36,15 @@ private:
 
     const unsigned int potenciaBusqueda = 15;
     const unsigned int potenciaGiro = 20;
-    const unsigned int potenciaAvance = 20;
+    const unsigned int potenciaAvance = 100;
 
-    unsigned long tiempoAtaqueInicio;
-    const unsigned int potenciaAtaqueAdelanteMax = 150;
-    const unsigned int potenciaAtaqueAdelanteMin = 20;
-    const unsigned int potenciaAtaqueAtras = 25;
-    const unsigned long duracionLoopAtaque = 150;
-    const unsigned int incrementoPotenciaAtaque = 10;
-    const unsigned long periodoIncrementoPotencia = 4000; // Periodo de incremento de potencia en milisegundos
+    unsigned long tiempoAtaqueBajo;
+    const unsigned int potenciaAtaqueBajo= 150;
+    const unsigned long duracionAtaqueBajo = 100; 
+
+    unsigned long tiempoAtaqueAlto;
+    const unsigned int potenciaAtaqueAlto= 250;
+    const unsigned long duracionAtaqueAlto = 500; 
 
     unsigned long tiempoUltimoIncremento; // Tiempo del último incremento de potencia
     unsigned int potenciaActualAtaque;    // Potencia actual de ataque
@@ -50,20 +53,27 @@ private:
     const unsigned int potenciaGiro180 = 60;
     const unsigned long duracionGiro180 = 150; // Duración máxima del giro en milisegundos (ejemplo)
 
+    unsigned long tiempoGiroAtaqueInicio;  // Tiempo de inicio del giro
+    const unsigned int potenciaGiroAtaque = 100;
+    const unsigned long duracionGiroAtaque = 20; // Duración máxima del giro en milisegundos (ejemplo)
+
     unsigned long tiempoRetrocesoInicio; // Tiempo de inicio de retroceso
     const unsigned int potenciaRetroceso = 40;
-    const unsigned long duracionRetroceso = 500; // Duración del retroceso en milisegundos (ejemplo)
+    const unsigned long duracionRetroceso = 200; // Duración del retroceso en milisegundos (ejemplo)
 
-    const char* nombresEstados[10] = {
+    const char* nombresEstados[12] = {
         "INICIO",
         "BUSQUEDA",
         "ALINEACION",
         "AVANCE",
-        "ATAQUE",
+        "ATAQUE BAJO",
+        "ATAQUE ALTO",
         "DETECCION DE LINEA",
         "RETROCESO",
         "GIRO DERECHO 180",
-        "GIRO IZQUIERDO 180"
+        "GIRO IZQUIERDO 180",
+        "GIRO EN ATAQUE",
+        "TALADRO"
     };
 };
 

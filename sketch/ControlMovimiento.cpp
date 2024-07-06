@@ -51,6 +51,16 @@ void ControlMovimiento::stop(int brake) {
     motor2.stop(brake);
 }
 
+void ControlMovimiento::giroHorarioAxisM2(int potencia) {
+    motor1.setSpeed(-potencia);
+    motor2.stop(potencia);
+}
+
+void ControlMovimiento::giroAntihorarioAxisM1(int potencia) {
+    motor2.setSpeed(-potencia);
+    motor1.stop(potencia);
+}
+
 void ControlMovimiento::adelante(int potencia) {
     motor1.setSpeed(potencia);
     motor2.setSpeed(potencia);
