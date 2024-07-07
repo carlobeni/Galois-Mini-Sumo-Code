@@ -1,14 +1,16 @@
-#ifndef GESTOR_ESTADOS_ALPHA_H
-#define GESTOR_ESTADOS_ALPHA_H
+#ifndef GESTOR_ESTADOS_BETHA_H
+#define GESTOR_ESTADOS_BETHA_H
 
 #include "ControlMovimiento.h"
 #include "DetectorEnemigo.h"
 #include "DetectorLinea.h"
 
 enum Estado {
+    DISPARO_INIT,
     INICIO,
     BUSQUEDA,
     ALINEACION,
+    ROTACION_ORB,
     AVANCE,
     ATAQUE_BAJO,
     ATAQUE_ALTO,
@@ -20,9 +22,9 @@ enum Estado {
     TALADRO
 };
 
-class GestorEstadosAlpha {
+class GestorEstadosBetha {
 public:
-    GestorEstadosAlpha(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL);
+    GestorEstadosBetha(ControlMovimiento& controlMov, DetectorEnemigo& detE, DetectorLinea& detL);
     void begin();
     void update();
     void stop();
@@ -34,16 +36,19 @@ private:
     DetectorLinea& detL;
     Estado estadoActual;
 
+    const unsigned long duracionDisparoInit = 20; // Duración máxima del giro en milisegundos (ejemplo)
+    const unsigned int potenciaDisparoInit = 100;    // Potencia actual de ataque
+
     const unsigned int potenciaBusqueda = 15;
     const unsigned int potenciaGiro = 20;
-    const unsigned int potenciaAvance = 25;;
+    const unsigned int potenciaAvance = 20;
 
     unsigned long tiempoAtaqueBajo;
-    const unsigned int potenciaAtaqueBajo= 50;
+    const unsigned int potenciaAtaqueBajo= 100;
     const unsigned long duracionAtaqueBajo = 100; 
 
     unsigned long tiempoAtaqueAlto;
-    const unsigned int potenciaAtaqueAlto= 100;
+    const unsigned int potenciaAtaqueAlto= 200;
     const unsigned long duracionAtaqueAlto = 500; 
 
     unsigned long tiempoUltimoIncremento; // Tiempo del último incremento de potencia
@@ -61,10 +66,12 @@ private:
     const unsigned int potenciaRetroceso = 40;
     const unsigned long duracionRetroceso = 200; // Duración del retroceso en milisegundos (ejemplo)
 
-    const char* nombresEstados[12] = {
+    const char* nombresEstados[14] = {
+        "DISPARO INIT",
         "INICIO",
         "BUSQUEDA",
         "ALINEACION",
+        "ROTACION ORBITAL",
         "AVANCE",
         "ATAQUE BAJO",
         "ATAQUE ALTO",

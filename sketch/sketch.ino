@@ -1,9 +1,8 @@
 #include "DetectorEnemigo.h"
 #include "DetectorLinea.h"
 #include "ControlMovimiento.h"
-#include "GestorEstadosAlpha.h"
+#include "GestorEstadosBetha.h"
 #include <IRremote.h>
-
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
@@ -47,14 +46,14 @@ StateIR currentStateIR = Init;
 
 // Definición de pines para los motores
 // Derecho
-#define M1_INA 5  // VERDE
-#define M1_INB 16 // LILA
-#define M1_PWM 17 // AZUL
+#define M1_INA 18  // VERDE
+#define M1_PWM 19  // AZUL
+#define M1_INB 21  // LILA
 
 // Izquierdo
-#define M2_INA 18 // VERDE
-#define M2_INB 21 // LILA
-#define M2_PWM 19 // AZUL
+#define M2_INA 16  // VERDE
+#define M2_PWM 17  // AZUL
+#define M2_INB 5   // LILA
 
 ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB);
 
@@ -63,17 +62,17 @@ ControlMovimiento controlMov(M1_PWM, M1_INA, M1_INB, M2_PWM, M2_INA, M2_INB);
 // Conector 3: sensor enemigo trasero + 2 sensores QT
 
 const uint8_t numSensoresE = 7;
-uint8_t pinSensoresE[numSensoresE] = {25, 33, 32, 26, 27, 14, 34}; // Define pines de los sensores
+uint8_t pinSensoresE[numSensoresE] = {25, 33, 32, 27, 14, 26, 34}; // Define pines de los sensores
 DetectorEnemigo detE(pinSensoresE, numSensoresE);
 
 const uint8_t numSensoresL = 2;
 uint8_t pinSensoresL[numSensoresL] = {39, 35};
 DetectorLinea detL(pinSensoresL, numSensoresL);
 
-GestorEstadosAlpha gestorEstadosAlpha(controlMov, detE, detL);
+GestorEstadosBetha gestorEstadosBetha(controlMov, detE, detL);
 
-const char* ssid    = "PROFESORES";
-const char* password = "profeFIUNA#2024";
+const char* ssid = "VALENTINA";
+const char* password = "23247663";
 
 void setupOTA(){
   Serial.println("Cargando WIFI...");
@@ -125,6 +124,7 @@ void setupOTA(){
   Serial.print("Dirección IP: ");
   Serial.println(WiFi.localIP());
 }
+
 void setup()
 {
   setupOTA();
@@ -132,7 +132,7 @@ void setup()
   detE.begin();
   detL.begin();
   controlMov.begin();
-  gestorEstadosAlpha.begin();
+  gestorEstadosBetha.begin();
   irrecv.enableIRIn();
 }
 
@@ -151,14 +151,14 @@ void loop()
   // Activacion/Desactivacion del Gestor de Estados
   if (currentStateIR == Start)
   {
-    gestorEstadosAlpha.update();
+    gestorEstadosBetha.update();
     char buffer[300];
-    gestorEstadosAlpha.string(buffer, sizeof(buffer));
+    gestorEstadosBetha.string(buffer, sizeof(buffer));
     Serial.println(buffer);
   }
   else
   {
-    gestorEstadosAlpha.stop();
+    gestorEstadosBetha.stop();
   }
 }
 

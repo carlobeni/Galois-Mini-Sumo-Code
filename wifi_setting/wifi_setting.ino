@@ -3,8 +3,8 @@
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-const char* ssid    = "PROFESORES";
-const char* password = "profeFIUNA#2024";
+const char* ssid = "VALENTINA";
+const char* password = "23247663";
 
 void setup() {
   Serial.begin(115200);
